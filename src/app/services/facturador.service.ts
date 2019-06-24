@@ -13,7 +13,7 @@ export class FacturadorService {
     console.log('Documenta Facturador listo!');
   }
 
-  getFactutrador(){
+  getFacturador(){
     return this.http.get<Facturador>('http://localhost:3000/facturador/')
       .pipe(
         map(data => data)
@@ -31,13 +31,13 @@ export class FacturadorService {
     let autofacturador = 1;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const options = { headers };
-    this.http.get('http://localhost:3000/facturadorLast/').subscribe(
+    this.http.get('http://localhost:3000/facturador/facturadorLast/').subscribe(
       (data: any) => {
         autofacturador = autofacturador + Number(data.max);
         facturador.id_facturador = autofacturador.toString();
         facturador.codigo = autofacturador.toString();
         const facturadorJson = JSON.stringify(facturador);
-        this.http.post('http://localhost:3000/entidad/', facturadorJson, options).subscribe(
+        this.http.post('http://localhost:3000/facturador/create/', facturadorJson, options).subscribe(
           // tslint:disable-next-line:no-shadowed-variable
           (data: any) => {
             console.log(data);
@@ -51,8 +51,9 @@ export class FacturadorService {
   updateFacturador(facturadorActualizar: Facturador): Observable<void> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const options = { headers };
+    const id = facturadorActualizar.id_facturador;
     const facturadorJson = JSON.stringify(facturadorActualizar);
-    this.http.post('http://localhost:3000/facturador/', facturadorJson, options).subscribe(
+    this.http.put('http://localhost:3000/facturador/' + id + '/update' , facturadorJson, options).subscribe(
       data => {
         console.log(data);
       }

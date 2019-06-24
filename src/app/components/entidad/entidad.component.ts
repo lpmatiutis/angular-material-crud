@@ -33,6 +33,8 @@ export class EntidadComponent implements OnInit, AfterViewInit {
   // It maintains list of Registrations
   entidades: Entidad[] = [];
 
+  loading: boolean;
+
   displayedColumns = ['id_entidad', 'nombre', 'ruc_ci', 'telefono', 'direccion', 'localidad', 'update', 'delete'];
   dataSource = new MatTableDataSource<Entidad>(this.entidades);
 
@@ -42,6 +44,7 @@ export class EntidadComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getEntidades();
     this.dataSource.paginator = this.paginator;
+    //this.loading=false;
   }
 
   ngAfterViewInit(): void {
@@ -59,7 +62,7 @@ export class EntidadComponent implements OnInit, AfterViewInit {
   localidades: Localidad [] = [];
   
   constructor(private documenta: ConsultaService) {
-
+  this.loading=true;
     this.documenta.getLocalidad()
       .subscribe((data: any) => {
         this.localidades = data;
@@ -67,15 +70,15 @@ export class EntidadComponent implements OnInit, AfterViewInit {
     // Add default registration data.
     this.documenta.getEntidad()
       .subscribe((data: any) =>{
-          this.entidades=data;
-
+          this.entidades=data
       });
   }
 
   public getEntidades = () => {
     this.documenta.getEntidad()
       .subscribe((data: any) =>{
-          this.dataSource.data = data as Entidad[];
+          this.dataSource.data = data as Entidad[]
+          this.loading=false;
 
       });
   }

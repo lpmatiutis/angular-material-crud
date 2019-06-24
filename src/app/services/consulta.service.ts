@@ -32,12 +32,13 @@ export class ConsultaService {
     let autoentidad = 1;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const options = { headers };
-    this.http.get('http://localhost:3000/entidadLast/').subscribe(
+    this.http.get('http://localhost:3000/entidad/entidadLast/').subscribe(
       (data: any) => {
         autoentidad = autoentidad + Number(data.max);
         entidad.id_entidad = autoentidad.toString();
         const entidadJson = JSON.stringify(entidad);
-        this.http.post('http://localhost:3000/entidad/', entidadJson, options).subscribe(
+        console.log('entidad: ' + entidadJson);
+        this.http.post('http://localhost:3000/entidad/create/', entidadJson, options).subscribe(
           // tslint:disable-next-line:no-shadowed-variable
           (data: any) => {
             console.log(data);

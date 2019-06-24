@@ -1,12 +1,10 @@
 import { Component, ViewChild, OnInit,OnDestroy, AfterViewInit } from '@angular/core';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource, MatTable} from '@angular/material/table';
-import { MatSort, MatSelect, MatSelectionList } from '@angular/material';
+import {MatTableDataSource} from '@angular/material/table';
+import { MatSort, MatSelectionList } from '@angular/material';
 import { FacturadorService } from '../../services/facturador.service';
 import { FormControl } from '@angular/forms';
-import { takeUntil, take } from 'rxjs/operators';
-import { Subject, ReplaySubject } from 'rxjs';
+import { Subject} from 'rxjs';
 import { Pipe, PipeTransform } from '@angular/core';
 
 class Entidad {
@@ -46,16 +44,13 @@ export class FacturadorComponent implements OnInit, AfterViewInit, OnDestroy  {
 
   facturadores: Facturador[];
 
+  loading: boolean;
+
   public bankCtrl: FormControl = new FormControl();
 
   entidades: Entidad [] = [];
 
   protected _onDestroy = new Subject<void>();
-
-  public filteredBanks: ReplaySubject<Entidad[]> = new ReplaySubject<Entidad[]>(1);
-
-  /** control for the MatSelect filter keyword */
-  public bankFilterCtrl: FormControl = new FormControl();
 
   displayedColumns = ['id_facturador', 'codigo', 'descripcion', 'entidad', 'update', 'delete'];
   dataSource = new MatTableDataSource<Facturador>(this.facturadores);
@@ -67,15 +62,6 @@ export class FacturadorComponent implements OnInit, AfterViewInit, OnDestroy  {
   ngOnInit() {
     this.getFacturadores();
     this.dataSource.paginator = this.paginator;
-    this.bankCtrl.setValue(this.entidades[10]);
-    this.filteredBanks.next(this.entidades.slice());
-
-    this.bankFilterCtrl.valueChanges
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe(() => {
-        console.log('Entidades' + this.entidades)
-        this.filterBanks();
-      });
   }
 
   ngAfterViewInit(): void {
@@ -91,13 +77,14 @@ export class FacturadorComponent implements OnInit, AfterViewInit, OnDestroy  {
   selectedRow: number;
 
   constructor(private documenta: FacturadorService) {
+    this.loading=true;
     this.documenta.getEntidad()
       .subscribe((data: any) => {
         this.entidades = data;
         
       });
     // Add default registration data.
-    this.documenta.getFactutrador()
+    this.documenta.getFacturador()
       .subscribe((data: any) =>{
           this.facturadores=data;
 
@@ -107,9 +94,10 @@ export class FacturadorComponent implements OnInit, AfterViewInit, OnDestroy  {
    
 
   public getFacturadores = () => {
-    this.documenta.getFactutrador()
+    this.documenta.getFacturador()
       .subscribe((data: any) =>{
-          this.dataSource.data = data as Facturador[];
+          this.dataSource.data = data as Facturador[]
+          this.loading=false;
 
       });
   }
@@ -129,11 +117,6 @@ export class FacturadorComponent implements OnInit, AfterViewInit, OnDestroy  {
   }
 
   public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  public doFilterEntidad = (value: string) => {
-    this.entidades.filter(entidad => entidad);
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
@@ -191,41 +174,7 @@ export class FacturadorComponent implements OnInit, AfterViewInit, OnDestroy  {
     this.regModel.entidad = entidad;
   }
 
-  protected setInitialValue() {
-    this.filteredBanks
-      .pipe(take(1), takeUntil(this._onDestroy))
-      .subscribe(() => {
-        // setting the compareWith property to a comparison function
-        // triggers initializing the selection according to the initial value of
-        // the form control (i.e. _initializeSelection())
-        // this needs to be done after the filteredBanks are loaded initially
-        // and after the mat-option elements are available
-        this.selectionList.compareWith = (a: Entidad, b: Entidad) => a && b && a.id_entidad === b.id_entidad,
-        error => console.error('Aqui' + error);
-        
-      });
-  }
-
-  protected filterBanks() {
-    if (!this.entidades) {
-      return;
-    }
-    // get the search keyword
-    let search = this.bankFilterCtrl.value;
-    if (!search) {
-      this.filteredBanks.next(this.entidades.slice());
-      return;
-    } else {
-      search = search.toLowerCase();
-    }
-    // filter the banks
-    this.filteredBanks.next(
-      this.entidades.filter(entidad => entidad.nombre.toLowerCase().indexOf(search) > -1)
-    );
-  }
-
 }
-
 @Pipe({name: 'filtrarEntidades'})
    export class EntidadPipe implements PipeTransform {
     transform(allEntidad: Entidad[], searchText: string): Entidad[] {

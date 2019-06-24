@@ -5,7 +5,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import {HttpClientModule} from '@angular/common/http';
 //Angular
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule, MatCheckboxModule, MatSelectModule, MatInputModule, MatMenuModule, MatToolbarModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatSelectModule, MatInputModule, MatMenuModule, MatToolbarModule, MatAutocomplete, MatAutocompleteModule} from '@angular/material';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -26,6 +26,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { EntidadComponent } from './components/entidad/entidad.component';
 import { FacturadorComponent, EntidadPipe } from './components/facturador/facturador.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -36,13 +37,16 @@ import { FacturadorComponent, EntidadPipe } from './components/facturador/factur
     EntidadComponent,
     NavbarComponent,
     FacturadorComponent,
-    EntidadPipe
+    EntidadPipe,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatToolbarModule,
+    //MatAutocomplete,
+    MatAutocompleteModule,
     MatCardModule,
     MatChipsModule,
     MatIconModule,

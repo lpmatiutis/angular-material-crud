@@ -2,6 +2,7 @@
     <br>
     <hr>
     <h2>FACTURADOR</h2>
+    <app-loading *ngIf="loading"></app-loading>
     <div fxLayout fxLayoutAlign="center center">
         <mat-form-field fxFlex="40%">
             <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Filtrar">
@@ -46,7 +47,7 @@
             <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Borrar </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-icon-button color="warn" class="btn btn-danger" (click)="onDelete(i)"><mat-icon class="mat-18">delete</mat-icon>
+                    <button mat-icon-button color="warn" class="btn btn-danger"><mat-icon class="mat-18">delete</mat-icon>
             </button>
                 </td>
             </ng-container>
@@ -60,9 +61,9 @@
 <div class="regentry" *ngIf="showNew">
     <form (ngSubmit)="onSave()">
         <div class="form-group row">
-            <label for="firstname-input" class="col-2 col-form-label">Nombre</label>
+            <label for="firstname-input" class="col-2 col-form-label">Descripcion</label>
             <div class="col-10">
-                <input class="form-control" type="text" [(ngModel)]="regModel.nombre" name="nombre">
+                <input class="form-control" type="text" [(ngModel)]="regModel.descripcion" name="descripcion">
             </div>
         </div>
 
@@ -72,25 +73,16 @@
 
                 <mat-label>{{regModel.entidad.nombre}}</mat-label>
                 <mat-select placeholder="Select">
-                    <p><input [(ngModel)]="searchText" placeholder="Buscar..."></p>
-                    <mat-option class="dropdown-item" *ngFor="let item of entidades | filtrarEntidades: searchText" (click)="onChangeEntidad(item)" [value]="item.nombre">
+                    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+                    <mat-option class="dropdown-item" *ngFor="let item of entidades" (click)="onChangeEntidad(item)" [value]="item.nombre">
                         {{item.nombre}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
+
+
         <button type="submit" class="btn btn-success">Guardar</button>
         <button type="submit" class="btn btn-danger">Cancelar</button>
     </form>
-
-</div>
-
-<div>
-    <select class="form-control" [(ngModel)]="searchText" name="sel">
-    <ul>
-        <li *ngFor="let it of entidades | filtrarEntidades: searchText">
-            {{it.nombre}}
-        </li>
-    </ul>
-</select>
 </div>
