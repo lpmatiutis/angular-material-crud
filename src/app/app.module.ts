@@ -27,6 +27,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { EntidadComponent } from './components/entidad/entidad.component';
 import { FacturadorComponent, EntidadPipe } from './components/facturador/facturador.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { ServicioOperacionComponent } from './components/servicio-operacion/servicio-operacion.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { LoadingComponent } from './components/loading/loading.component';
     NavbarComponent,
     FacturadorComponent,
     EntidadPipe,
-    LoadingComponent
+    LoadingComponent,
+    ServicioOperacionComponent
   ],
   imports: [
     BrowserModule,
